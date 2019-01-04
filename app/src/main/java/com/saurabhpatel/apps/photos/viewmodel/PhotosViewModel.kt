@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.saurabhpatel.apps.models.photo.Photo
+import com.saurabhpatel.apps.photos.datamodels.Photo
 import com.saurabhpatel.apps.repositories.datamanager.Resource
 import com.saurabhpatel.apps.repositories.repo.PhotosRepoImpl
 import javax.inject.Inject
@@ -13,8 +13,8 @@ class PhotosViewModel @Inject constructor(private val photosRepoImpl: PhotosRepo
 
     private val searchQuery: MutableLiveData<String> = MutableLiveData()
 
-    val photosResourceLiveData = Transformations.switchMap(searchQuery) { searchQuery ->
-        photosRepoImpl.fetchPhotos(searchQuery, 0)
+    private val photosResourceLiveData = Transformations.switchMap(searchQuery) { searchQuery ->
+        photosRepoImpl.fetchPhotos(searchQuery, 1)
     }
 
     fun getPhotos(): LiveData<Resource<List<Photo>>> {

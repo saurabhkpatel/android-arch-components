@@ -6,6 +6,8 @@ import com.saurabhpatel.apps.api.PhotoApiService
 import com.saurabhpatel.apps.util.LiveDataCallAdapterFactory
 import dagger.Module
 import dagger.Provides
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -25,8 +27,12 @@ class ApplicationModule {
     @Singleton
     @Provides
     internal fun provideApiService(): PhotoApiService {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
+        val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
         return Retrofit.Builder()
                 .baseUrl(PhotoApiService.BASE_URL)
+                .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(LiveDataCallAdapterFactory())
                 .build()

@@ -1,9 +1,11 @@
 package com.saurabhpatel.apps.repositories.repo
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.saurabhpatel.apps.api.ApiResponse
 import com.saurabhpatel.apps.api.PhotoApiService
-import com.saurabhpatel.apps.models.photo.Photo
+import com.saurabhpatel.apps.photos.datamodels.Photo
+import com.saurabhpatel.apps.photos.datamodels.PhotoSearchResponse
 import com.saurabhpatel.apps.repositories.datamanager.AppExecutors
 import com.saurabhpatel.apps.repositories.datamanager.NetworkBoundResource
 import com.saurabhpatel.apps.repositories.datamanager.Resource
@@ -14,21 +16,22 @@ class PhotosRepoImpl @Inject constructor(private val photosApiService: PhotoApiS
 
     override fun fetchPhotos(queryText: String, pageNumber: Int): LiveData<Resource<List<Photo>>> {
 
-        return object : NetworkBoundResource<List<Photo>, List<Photo>>(appExecutors) {
+        return object : NetworkBoundResource<List<Photo>, PhotoSearchResponse>(appExecutors) {
 
-            override fun saveCallResult(item: List<Photo>) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
+            override fun getResultType(processResponse: PhotoSearchResponse): List<Photo> = processResponse.photos
 
             override fun shouldFetch(data: List<Photo>?): Boolean {
                 return true
             }
 
             override fun loadFromDb(): LiveData<List<Photo>> {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val emptyPhotosList: List<Photo> = emptyList()
+                val emptyPhotosListLiveData: MutableLiveData<List<Photo>> = MutableLiveData<List<Photo>>()
+                emptyPhotosListLiveData.value = emptyPhotosList
+                return emptyPhotosListLiveData
             }
 
-            override fun createCall(): LiveData<ApiResponse<List<Photo>>> {
+            override fun createCall(): LiveData<ApiResponse<PhotoSearchResponse>> {
                 return photosApiService.fetchPhotos(queryText, pageNumber)
             }
         }.asLiveData()

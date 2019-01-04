@@ -1,7 +1,7 @@
 package com.saurabhpatel.apps.api
 
 import androidx.lifecycle.LiveData
-import com.saurabhpatel.apps.models.photo.Photo
+import com.saurabhpatel.apps.photos.datamodels.PhotoSearchResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -14,13 +14,13 @@ interface PhotoApiService {
     }
 
     private val PIXABAY_KEY: String
-        get() = "pixel3"
+        get() = "11095401-11227b412z74feece2dcc3ae8"
 
     @GET(API_SEGMENT)
     fun fetchPhotos(
             @Query("q") searchText: String,
-            @Query("page") page: Int = 0,
+            @Query("page") page: Int = 1,
             @Query("image_type") imageType: String = PHOTO_QUERY_PARAM,
-            @Query("key") apiKey: String = PIXABAY_KEY): LiveData<ApiResponse<List<Photo>>>
+            @Query("key") apiKey: String = PIXABAY_KEY): LiveData<ApiResponse<PhotoSearchResponse>>
 
 }

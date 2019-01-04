@@ -1,4 +1,4 @@
-package com.saurabhpatel.apps.models.photo
+package com.saurabhpatel.apps.photos.datamodels
 
 import com.google.gson.annotations.SerializedName
 

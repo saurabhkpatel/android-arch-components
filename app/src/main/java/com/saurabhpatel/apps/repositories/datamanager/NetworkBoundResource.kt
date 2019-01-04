@@ -58,15 +58,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
             when (response) {
                 is ApiSuccessResponse -> {
                     appExecutors.diskIO().execute {
-                        saveCallResult(processResponse(response))
-                        appExecutors.mainThread().execute {
-                            // we specially request a new live data,
-                            // otherwise we will get immediately last cached value,
-                            // which may not be updated with latest results received from network.
-                            result.addSource(loadFromDb()) { newData ->
-                                setValue(Resource.success(newData))
-                            }
-                        }
+                        setValue(Resource.success(getResultType(processResponse(response))))
                     }
                 }
                 is ApiEmptyResponse -> {
@@ -87,6 +79,8 @@ abstract class NetworkBoundResource<ResultType, RequestType>
         }
     }
 
+    protected abstract fun getResultType(processResponse: RequestType): ResultType
+
     protected open fun onFetchFailed() {}
 
     fun asLiveData() = result as LiveData<Resource<ResultType>>
@@ -95,7 +89,8 @@ abstract class NetworkBoundResource<ResultType, RequestType>
     protected open fun processResponse(response: ApiSuccessResponse<RequestType>) = response.body
 
     @WorkerThread
-    protected abstract fun saveCallResult(item: RequestType)
+    protected fun saveCallResult(item: RequestType) {
+    }
 
     @MainThread
     protected abstract fun shouldFetch(data: ResultType?): Boolean

@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="photosViewModel"
-            type="com.saurabhpatel.apps.photos.viewmodel.PhotosViewModel" />
+            type="com.saurabhpatel.apps.photos.viewmodel.PhotosViewModel"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Photo List"
-            tools:ignore="MissingConstraints"
-            tools:text="Photo List" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/photo_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingLeft="@dimen/margin_16dp"
+            android:paddingRight="@dimen/margin_16dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:context="com.google.samples.apps.sunflower.GardenActivity"
+            tools:listitem="@layout/list_item_photo"/>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

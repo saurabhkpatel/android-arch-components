@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout
+    android:id="@+id/layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="photo"
+            type="com.saurabhpatel.apps.photos.datamodels.Photo"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/photo_preview"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:contentDescription="Photo Preview Thumbnail"
+            android:scaleType="centerCrop"
+            app:imageFromUrl="@{photo.previewURL}"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="HardcodedText"
+            tools:srcCompat="@tools:sample/avatars"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{photo.user}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintLeft_toRightOf="@+id/photo_preview"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="JohnDoe"/>
+
+        <TextView
+            android:id="@+id/likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{photo.likesDisplay}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_constraintLeft_toRightOf="@+id/photo_preview"
+            app:layout_constraintTop_toBottomOf="@+id/username"
+            tools:layout_editor_absoluteX="286dp"
+            tools:text="500 Likes"/>
+
+        <TextView
+            android:id="@+id/views"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@{photo.viewsDisplay}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_constraintLeft_toRightOf="@+id/photo_preview"
+            app:layout_constraintTop_toBottomOf="@+id/likes"
+            tools:layout_editor_absoluteX="286dp"
+            tools:text="800 Views"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

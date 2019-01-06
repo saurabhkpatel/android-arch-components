@@ -57,7 +57,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>
             result.removeSource(dbSource)
             when (response) {
                 is ApiSuccessResponse -> {
-                    appExecutors.diskIO().execute {
+                    appExecutors.mainThread().execute {
                         setValue(Resource.success(getResultType(processResponse(response))))
                     }
                 }

@@ -26,5 +26,11 @@ data class Photo(
         val likes: Int,
 
         @field:SerializedName("views")
-        val views: String?
-)
+        val views: Int
+) {
+    val likesDisplay: String
+        get() = if (likes > 0) likes.toString().plus(" likes") else "No likes"
+
+    val viewsDisplay: String
+        get() = if (views > 0) views.toString().plus(" views") else "No views"
+}

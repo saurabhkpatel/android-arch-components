@@ -10,10 +10,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.saurabhpatel.apps.databinding.FragmentPhotosBinding
 import com.saurabhpatel.apps.photos.datamodels.Photo
+import com.saurabhpatel.apps.photos.ui.adapter.PhotoAdapter
 import com.saurabhpatel.apps.photos.viewmodel.PhotosViewModel
 import com.saurabhpatel.apps.repositories.datamanager.Resource
+import com.saurabhpatel.apps.repositories.datamanager.Status
 import dagger.android.support.AndroidSupportInjection
-import timber.log.Timber
 import javax.inject.Inject
 
 class PhotosFragment : Fragment() {
@@ -38,10 +39,17 @@ class PhotosFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        photosViewModel.setSearchQuery("pixel")
-        photosViewModel.getPhotos().observe(this, Observer<Resource<List<Photo>>> { photos ->
-            if (photos != null) {
-                Timber.d("Got data")
+        val photoAdapter = PhotoAdapter()
+        fragmentPhotosBinding.photoList.adapter = photoAdapter
+        setUi(photoAdapter)
+    }
+
+    private fun setUi(photoAdapter: PhotoAdapter) {
+
+        photosViewModel.setSearchQuery("sunset")
+        photosViewModel.getPhotosResourceLiveData().observe(this, Observer<Resource<List<Photo>>> { photos ->
+            if (photos != null && photos.status == Status.SUCCESS) {
+                photoAdapter.submitList(photos.data)
             }
         })
     }

@@ -9,11 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.saurabhpatel.apps.databinding.FragmentPhotosBinding
-import com.saurabhpatel.apps.photos.datamodels.Photo
 import com.saurabhpatel.apps.photos.ui.adapter.PhotoAdapter
 import com.saurabhpatel.apps.photos.viewmodel.PhotosViewModel
-import com.saurabhpatel.apps.repositories.datamanager.Resource
-import com.saurabhpatel.apps.repositories.datamanager.Status
 import dagger.android.support.AndroidSupportInjection
 import javax.inject.Inject
 
@@ -47,10 +44,16 @@ class PhotosFragment : Fragment() {
     private fun setUi(photoAdapter: PhotoAdapter) {
 
         photosViewModel.setSearchQuery("sunset")
-        photosViewModel.getPhotosResourceLiveData().observe(this, Observer<Resource<List<Photo>>> { photos ->
+        photosViewModel.getPhotosPagedListLiveData().observe(this, Observer { photosPagedList ->
+            if (photosPagedList != null) {
+                photoAdapter.submitList(photosPagedList)
+            }
+        })
+
+        /*photosViewModel.getPhotosResourceLiveData().observe(this, Observer<Resource<List<Photo>>> { photos ->
             if (photos != null && photos.status == Status.SUCCESS) {
                 photoAdapter.submitList(photos.data)
             }
-        })
+        })*/
     }
 }

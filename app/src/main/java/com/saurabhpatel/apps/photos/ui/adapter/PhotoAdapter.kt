@@ -2,13 +2,12 @@ package com.saurabhpatel.apps.photos.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.ListAdapter
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.saurabhpatel.apps.databinding.ListItemPhotoBinding
 import com.saurabhpatel.apps.photos.datamodels.Photo
 
-
-class PhotoAdapter : ListAdapter<Photo, PhotoAdapter.ListPhotoViewHolder>(PhotoDiffCallback()) {
+class PhotoAdapter : PagedListAdapter<Photo, PhotoAdapter.ListPhotoViewHolder>(PhotoDiffCallback()) {
 
     override fun onBindViewHolder(holder: ListPhotoViewHolder, position: Int) {
         val photo = getItem(position)
@@ -26,7 +25,7 @@ class PhotoAdapter : ListAdapter<Photo, PhotoAdapter.ListPhotoViewHolder>(PhotoD
     }
 
     inner class ListPhotoViewHolder(private val listItemPhotoBinding: ListItemPhotoBinding) : RecyclerView.ViewHolder(listItemPhotoBinding.root) {
-        fun bindView(photoItem: Photo) {
+        fun bindView(photoItem: Photo?) {
             listItemPhotoBinding.apply {
                 photo = photoItem
                 executePendingBindings()

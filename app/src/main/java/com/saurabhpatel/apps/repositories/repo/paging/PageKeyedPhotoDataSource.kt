@@ -1,11 +1,11 @@
 package com.saurabhpatel.apps.repositories.repo.paging
 
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PageKeyedDataSource
 import com.saurabhpatel.apps.photos.datamodels.Photo
 import com.saurabhpatel.apps.repositories.datamanager.Status
 import com.saurabhpatel.apps.repositories.repo.PhotosRepoImpl
+import timber.log.Timber
 
 class PageKeyedPhotoDataSource(
         private val photosRepoImpl: PhotosRepoImpl,
@@ -25,25 +25,15 @@ class PageKeyedPhotoDataSource(
                                        previousPage: Int?,
                                        currentPage: Int,
                                        nextPage: Int?) {
-        val fetchPhotos = photosRepoImpl.fetchPhotos(searchQuery, currentPage)
-
-        val result = MediatorLiveData<List<Photo>>()
-        result.addSource(fetchPhotos) { newChangedValue ->
-            if (newChangedValue.status == Status.SUCCESS) {
-                postInitialState(Status.SUCCESS)
-                if (newChangedValue.data != null) {
-                    callback.onResult(
-                            newChangedValue.data,
-                            previousPage,
-                            nextPage
-                    )
-                }
-            } else if (newChangedValue.status == Status.LOADING) {
-                postInitialState(Status.LOADING)
-            } else if (newChangedValue.status == Status.ERROR) {
-                postInitialState(Status.ERROR)
-            }
-        }
+        photosRepoImpl.fetchPhotos(
+                searchQuery,
+                currentPage,
+                onSuccessResponse = fun(photos: List<Photo>) {
+                    callback.onResult(photos, previousPage, nextPage)
+                },
+                onFailureResponse = fun(errorMessage: String) {
+                    Timber.d(errorMessage)
+                })
     }
 
 
@@ -62,47 +52,35 @@ class PageKeyedPhotoDataSource(
                                      callback: LoadCallback<Int, Photo>,
                                      currentPage: Int,
                                      nextPage: Int) {
-        val fetchPhotos = photosRepoImpl.fetchPhotos(searchQuery, currentPage)
-
-        val result = MediatorLiveData<List<Photo>>()
-        result.addSource(fetchPhotos) { newChangedValue ->
-            if (newChangedValue.status == Status.SUCCESS) {
-                networkState.postValue(Status.SUCCESS)
-                if (newChangedValue.data != null) {
-                    callback.onResult(newChangedValue.data, nextPage)
-                }
-            } else if (newChangedValue.status == Status.LOADING) {
-                networkState.postValue(Status.LOADING)
-            } else if (newChangedValue.status == Status.ERROR) {
-                networkState.postValue(Status.ERROR)
-            }
-        }
+        photosRepoImpl.fetchPhotos(
+                searchQuery,
+                currentPage,
+                onSuccessResponse = fun(photos: List<Photo>) {
+                    callback.onResult(photos, nextPage)
+                },
+                onFailureResponse = fun(errorMessage: String) {
+                    Timber.d(errorMessage)
+                })
     }
 
     override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, Photo>) {
         val currentPage = params.key
         val previousPage = currentPage - 1
-        makeLoadAfterRequest(params, callback, currentPage, previousPage)
+        makeLoadBeforeRequest(params, callback, currentPage, previousPage)
     }
 
     private fun makeLoadBeforeRequest(params: LoadParams<Int>,
                                       callback: LoadCallback<Int, Photo>,
                                       currentPage: Int,
                                       previousPage: Int) {
-        val fetchPhotos = photosRepoImpl.fetchPhotos(searchQuery, currentPage)
-
-        val result = MediatorLiveData<List<Photo>>()
-        result.addSource(fetchPhotos) { newChangedValue ->
-            if (newChangedValue.status == Status.SUCCESS) {
-                networkState.postValue(Status.SUCCESS)
-                if (newChangedValue.data != null) {
-                    callback.onResult(newChangedValue.data, previousPage)
-                }
-            } else if (newChangedValue.status == Status.LOADING) {
-                networkState.postValue(Status.LOADING)
-            } else if (newChangedValue.status == Status.ERROR) {
-                networkState.postValue(Status.ERROR)
-            }
-        }
+        photosRepoImpl.fetchPhotos(
+                searchQuery,
+                currentPage,
+                onSuccessResponse = fun(photos: List<Photo>) {
+                    callback.onResult(photos, previousPage)
+                },
+                onFailureResponse = fun(errorMessage: String) {
+                    Timber.d(errorMessage)
+                })
     }
 }

@@ -14,7 +14,7 @@ class PhotosPagingRepoImpl @Inject constructor(private val photosRepoImpl: Photo
                                                private val appExecutors: AppExecutors) {
 
     @MainThread
-    public fun fetchPhotos(searchQuery: String, pageSize: Int): PagedListModel<Photo> {
+    fun fetchPhotos(searchQuery: String, pageSize: Int): PagedListModel<Photo> {
 
         val factory = photoDataSourceFactory(searchQuery)
 

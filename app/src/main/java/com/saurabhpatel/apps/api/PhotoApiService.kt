@@ -31,6 +31,4 @@ interface PhotoApiService {
             @Query("page") page: Int = 1,
             @Query("image_type") imageType: String = PHOTO_QUERY_PARAM,
             @Query("key") apiKey: String = PIXABAY_KEY): Call<PhotoSearchResponse>
-
-
 }
